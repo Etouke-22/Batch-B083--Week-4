@@ -41,19 +41,73 @@ In-scope target: medirozahospital.com (web application and associated directorie
 
 Limitations: No DoS testing; no exploitation of out-of-scope hosts; destructive testing avoided.
 
+# 3. Findings and Proof of Exploitation
+F-01 — Exposed Database Backup (Critical)
+Milestone 1/3 evidence:
+
+`robots.txt` revealed` Disallow: /old/` — [screenshot]
+`https://medirozahospital.com/old/` showed an open directory index listing `mediroza_db_backup_2019.sql` (7 KB) — [screenshot]
+File downloaded unauthenticated via `wget;` contains full `mediroza_hr dump:` `staff` table (30 records with salaries in ZAR, national IDs, personal phone numbers, emails) and `shareholders` table (10 shareholders with ownership percentages). Header states: **"WARNING: contains confidential staff and shareholder records."** </br>
+Full data extracted in Section 4 of the engagement workbook (salaries e.g. Medical Director R160,000/mo; shareholder splits e.g. Dr. R. Naidoo 18%).
+
+F-02 — Directory Listing on Sensitive Paths (High)
+/patient/, /staff/, and /old/ all return autoindex listings revealing file structure: login.php, download.php, portal.php, logout.php, reports/, error_log (243 KB). — [screenshots of each index]
+
+F-03 — Weak Patient Portal Authentication (High)
+Login at /patient/login.php was assessed and defeated via [credential attack / SQLi / password reuse with data from F-01 — INSERT YOUR M1 METHOD AND EVIDENCE]. Authenticated session obtained; portal exposes patient lab reports. — [screenshots: successful login, portal view]
+
+F-03 — Weak Patient Portal Authentication (High)
+Login at /patient/login.php was assessed and defeated via [credential attack / SQLi / password reuse with data from F-01 — INSERT YOUR M1 METHOD AND EVIDENCE]. Authenticated session obtained; portal exposes patient lab reports. — [screenshots: successful login, portal view]
+
+F-04 — Path Traversal / Insecure Direct Object Reference in download.php (Critical)
+The report download endpoint accepts a user-controlled file parameter without sanitisation, allowing retrieval of files belonging to other patients (IDOR) or traversal outside the intended directory. — [INSERT YOUR EXPLOIT REQUEST/RESPONSE AND THE 3 RETRIEVED PDFs]
 
 
+F-05 — Defeated PDF Encryption (High)
+All three patient lab reports used PDF encryption that was recovered:
 
+File 1: [encryption type V/R from pdfinfo, mode 10500/10700, password: INSERT]
+File 2: [type, method, password: INSERT]
+File 3: [type, method, password: INSERT] Passwords were recovered with john/hashcat using wordlists derived from context (rockyou + custom list built from cewl and leaked staff data). Proof: cracking output + pdftotext of recovered contents. — [screenshots]
+
+F-06 — Exposed PHP Error Log (Medium)
+/patient/error_log (243 KB) is present at a known path; listing exposure reveals its existence and size. Direct retrieval was blocked by 403 (WAF/UA filtering), but the filename is confirmed. — [screenshot of index entry]
+
+F-07 — Sensitive Paths in robots.txt (Low)
+Disallow: /patient/, /staff/, /old/ acts as a disclosure mechanism for attackers; all three were confirmed exploitable locations.
+
+F-08 — Outdated/Versioned Software Disclosure (Low–Medium)
+Server banner: LiteSpeed; footer: "Mediroza CMS 1.4.2" (also in the backup header, alongside the CMS backup module that produced F-01). Version enumeration enables targeted CVE research.
 
 
 |Finding | Rating | Justification|
 |---|----|---|
-|hdkd |mdksdk |kdcl;|
-|F-01 Database backup exposed	Critical (CVSS ~9.1)	Mass PII + payroll + corporate ownership data exposed to anonymous internet users; POPIA breach; reputational/regulatory/legal impact
-F-04 Path traversal/IDOR	Critical (~8.6)	Unauthorised access to patient medical records — direct patient-harm and compliance impact
-F-02 Directory listing	High (~7.5)	Provides the map for all subsequent exploitation; chain enabler
-F-03 Weak authentication	High (~7.4)	Defeats the only control protecting patient data
-F-05 Weak PDF encryption	High (~7.0)	Encryption defeated offline with commodity tools; passwords guessable from context
-F-06 Exposed error_log	Medium (~5.3)	Diagnostic leakage may reveal paths/credentials; partially blocked
-F-07 robots.txt disclosure	Low (~3.1)	Convenience to attackers; no direct impact alone
-F-08 Version disclosure	Low–Medium (3.1–5.3)	Facilitates targeted exploitation
+|F-01 Database backup exposed|	Critical (CVSS ~9.1)|	Mass PII + payroll + corporate ownership data exposed to anonymous internet users; POPIA breach; reputational/regulatory/legal impact
+|F-04 Path traversal/IDOR	|Critical (~8.6)|	Unauthorised access to patient medical records — direct patient-harm and compliance impact|
+F-02 Directory listing|	High (~7.5)	|Provides the map for all subsequent exploitation; chain enabler
+F-03 Weak authentication|	High (~7.4)	|Defeats the only control protecting patient data
+F-05 Weak PDF encryption|	High (~7.0)	|Encryption defeated offline with commodity tools; passwords guessable from context
+F-06 Exposed error_log|	Medium (~5.3)	|Diagnostic leakage may reveal paths/credentials; partially blocked
+F-07 robots.txt disclosure|	Low (~3.1)	|Convenience to attackers; no direct impact alone
+F-08 Version disclosure|	Low–Medium (3.1–5.3)	|Facilitates targeted exploitation
+
+
+
+
+# 5. Recommendations and Remediation
+1.Immediately remove and quarantine /old/mediroza_db_backup_2019.sql and any other backups from the web root; purge from caches/Google; rotate any credentials stored in backups; notify affected staff (POPIA obligation).</br>
+2.Disable directory listing (Options -Indexes / LiteSpeed equivalent) on all directories, especially /patient/, /staff/.</br>
+3.Fix download.php: whitelist exact filenames, resolve paths server-side, reject any input containing /, .., or absolute paths; enforce per-session ownership checks (IDOR).</br>
+4.Harden authentication: strong password policy, account lockout/rate limiting, MFA; no password reuse across portals; remediate any SQLi with parameterised queries.</br>
+5.PDF protection: if encryption is required, use AES-256 with strong, non-contextual passwords delivered out-of-band; better — serve reports only through the authenticated portal rather than password-protecting files.</br>
+6.Remove or protect error_log; set display_errors=Off, log outside web root.</br>
+7.Clean robots.txt — remove sensitive paths and enforce server-side access control instead of relying on crawler directives.</br>
+8.Update Mediroza CMS and suppress version banners; apply security headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options).</br>
+9.Retest after remediation and establish scheduled vulnerability scanning and backup-hygiene audits.</br>
+
+
+
+
+
+
+
