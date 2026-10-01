@@ -1,7 +1,17 @@
 # Batch-B083--Week-4
 
 
+# Penetration Testing Report — Mediroza General Hospital#
 
+|||
+|---|----|
+|Classification:| CONFIDENTIAL — Networkwalks / Authorised Personnel Only |
+|Client:| Mediroza General Hospital 
+|Target: |https://medirozahospital.com 
+|Engagement Type: |Black-box Web Application Penetration Test 
+|Duration:| 5 days | 
+|Tester:| [Etouke B. Cedric] — Batch B083, Week 4 
+|Authorisation: |Written permission granted by Networkwalks for this controlled educational engagement.
 
 
 
