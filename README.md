@@ -47,7 +47,15 @@ Key findings summary:
 # 2. Scope and Methodology
 In-scope target: medirozahospital.com (web application and associated directories only). Out of scope: social engineering, denial of service, any testing outside the agreed domain.
 
-**Methodology:** `Reconnaissance` → `Enumeration` → `Vulnerability identification` → `Exploitation` → `Post-exploitation analysis` → `Reporting`, aligned with OWASP Testing Guide and PTES.
+**Methodology:** 
+
+|||
+|---|----|
+|`Reconnaissance`| Passive information gathering using publicly available information and web-based tools.
+| `Enumeration` | Active information extraction of specific or deeper details 
+|`Vulnerability identification`| Analysis of application behavior for authentication and input-handling weaknesses.
+|`Exploitation`, `Post-exploitation analysis` |Demonstration of each issue's impact within the authorized environment.
+|`Reporting`| Aligned with OWASP Testing Guide and PTES.
 
 **Tools used:** `whois`, `dnsenum`, `nmap`, `whatweb`, nikto, `gobuster`, `curl`, `Burp Suite`, `wget`, `hash calculator`, `OnlineHashCrack`, john/hashcat, .
 
