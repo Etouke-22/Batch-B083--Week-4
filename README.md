@@ -3,6 +3,7 @@
 
 # Penetration Testing Report — Mediroza General Hospital#
 
+
 |||
 |---|----|
 |Classification:| CONFIDENTIAL — Networkwalks / Authorised Personnel Only |
@@ -13,7 +14,11 @@
 |Tester:| [Etouke B. Cedric] — Batch B083, Week 4 
 |Authorisation: |Written permission granted by Networkwalks for this controlled educational engagement.
 
+# 1. Executive Summary
+Mediroza General Hospital commissioned a black-box penetration test of its public web infrastructure. Over five days, the assessment identified a chain of serious weaknesses that, combined, allow an unauthenticated internet attacker to access confidential patient medical records and highly sensitive corporate information.
 
+**Overall Risk: CRITICAL.** The most significant finding is an unprotected database backup file containing employee payroll data, national identity numbers, contact details, and hospital shareholder records, discoverable via a directory listing referenced in `robots.txt.` This was followed by weaknesses in the patient portal authentication and a directory traversal flaw in the report download mechanism, enabling retrieval of encrypted patient lab reports whose protection was then defeated.</br>
+Key findings summary:
 
 
 |#|Finding|Severity|
@@ -27,6 +32,14 @@
 |7	|Sensitive paths disclosed in robots.txt|	Low|
 |8	|Missing security headers / information disclosure (CMS version, LiteSpeed)	|Low–Medium|
 
+# 2. Scope and Methodology
+In-scope target: medirozahospital.com (web application and associated directories only). Out of scope: social engineering, denial of service, any testing outside the agreed domain.
+
+**Methodology:** `Reconnaissance` → `Enumeration` → `Vulnerability identification` → `Exploitation` → `Post-exploitation analysis` → `Reporting`, aligned with OWASP Testing Guide and PTES.
+
+**Tools used:** `whois`, `dnsenum`, `nmap`, `whatweb`, nikto, `gobuster`, `curl`, `Burp Suite`, `wget`, `hash calculator`, `OnlineHashCrack`, john/hashcat, .
+
+Limitations: No DoS testing; no exploitation of out-of-scope hosts; destructive testing avoided.
 
 
 
