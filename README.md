@@ -79,7 +79,7 @@ Disallow: /patient/, /staff/, /old/ acts as a disclosure mechanism for attackers
 F-08 — Outdated/Versioned Software Disclosure (Low–Medium)
 Server banner: LiteSpeed; footer: "Mediroza CMS 1.4.2" (also in the backup header, alongside the CMS backup module that produced F-01). Version enumeration enables targeted CVE research.
 
-
+# 4 Risk Rating
 |Finding | Rating | Justification|
 |---|----|---|
 |F-01 Database backup exposed|	Critical (CVSS ~9.1)|	Mass PII + payroll + corporate ownership data exposed to anonymous internet users; POPIA breach; reputational/regulatory/legal impact
@@ -95,18 +95,27 @@ F-08 Version disclosure|	Low–Medium (3.1–5.3)	|Facilitates targeted exploita
 
 
 # 5. Recommendations and Remediation
-1.Immediately remove and quarantine /old/mediroza_db_backup_2019.sql and any other backups from the web root; purge from caches/Google; rotate any credentials stored in backups; notify affected staff (POPIA obligation).</br>
-2.Disable directory listing (Options -Indexes / LiteSpeed equivalent) on all directories, especially /patient/, /staff/.</br>
-3.Fix download.php: whitelist exact filenames, resolve paths server-side, reject any input containing /, .., or absolute paths; enforce per-session ownership checks (IDOR).</br>
-4.Harden authentication: strong password policy, account lockout/rate limiting, MFA; no password reuse across portals; remediate any SQLi with parameterised queries.</br>
-5.PDF protection: if encryption is required, use AES-256 with strong, non-contextual passwords delivered out-of-band; better — serve reports only through the authenticated portal rather than password-protecting files.</br>
-6.Remove or protect error_log; set display_errors=Off, log outside web root.</br>
-7.Clean robots.txt — remove sensitive paths and enforce server-side access control instead of relying on crawler directives.</br>
-8.Update Mediroza CMS and suppress version banners; apply security headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options).</br>
-9.Retest after remediation and establish scheduled vulnerability scanning and backup-hygiene audits.</br>
+1. Immediately remove and quarantine /old/mediroza_db_backup_2019.sql and any other backups from the web root; purge from caches/Google; rotate any credentials       stored in backups; notify affected staff (POPIA obligation).</br>
+2. Disable directory listing (Options -Indexes / LiteSpeed equivalent) on all directories, especially /patient/, /staff/.</br>
+3. Fix download.php: whitelist exact filenames, resolve paths server-side, reject any input containing /, .., or absolute paths; enforce per-session ownership        checks (IDOR).</br>
+4. Harden authentication: strong password policy, account lockout/rate limiting, MFA; no password reuse across portals; remediate any SQLi with parameterised         queries.</br>
+5. PDF protection: if encryption is required, use AES-256 with strong, non-contextual passwords delivered out-of-band; better — serve reports only through the        authenticated portal rather than password-protecting files.</br>
+6. Remove or protect error_log; set display_errors=Off, log outside web root.</br>
+7. Clean robots.txt — remove sensitive paths and enforce server-side access control instead of relying on crawler directives.</br>
+8. Update Mediroza CMS and suppress version banners; apply security headers (HSTS, CSP, X-Frame-Options, X-Content-Type-Options).</br>
+9. Retest after remediation and establish scheduled vulnerability scanning and backup-hygiene audits.</br>
 
 
+# Lessons learned
+i. Small security flaws can combine into a high-impact attack chain.</br>
+ii. Authentication errors and database errors reveal valuable information to attackers.</br>
+iii. Encryption is ineffective when document passwords are weak and easily guessed.</br>
+iv. Document metadata requires the same security review as visible content.</br>
+v. Backups must never be placed in publicly accessible web directories.</br>
+vi. Defense in depth is essential: secure input handling, authorization, file storage, server configuration, and data governance must all work together.
 
+# Conclusion
+This assessment demonstrated a complete path from the login page to highly sensitive internal data using well-known, preventable weaknesses. Critical and High findings should be addressed immediately before the system is used to store or serve real patient data.
 
 
 
