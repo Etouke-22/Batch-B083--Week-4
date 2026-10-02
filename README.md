@@ -63,20 +63,19 @@ Limitations: No DoS testing; no exploitation of out-of-scope hosts; destructive 
 
 # 3. Findings and Proof of Exploitation
 
-## 
-F-01 — Weak Patient Portal Authentication (High)
-Milestone 1/3 evidence:
+**F-01 — Weak Patient Portal Authentication (High)**
 
 Footprinting with `whois,` `nslookup`, `curl`,`theHarvester`, `nmap` which guided me with where next to look
 Login at /patient/login.php was assessed and defeated via [credential attack / SQLi / password reuse with data `Admin'--` and `password=anything` Authenticated session obtained; portal exposes patient lab reports. 
+Milestone 1/3 evidence:
+
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/Placeholder.png?raw=true)[screenshots: successful login, portal view] 
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/form%20brutefoece.png?raw=true) 
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/File%20access.png?raw=true)
 
 
 
-
-F-02 — Directory Listing on Sensitive Paths (High)
+**F-02 — Directory Listing on Sensitive Paths (High)**
 /patient/, /staff/, and /old/ all return autoindex listings revealing file structure: login.php, download.php, portal.php, logout.php, reports/, error_log (243 KB). 
 
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/7a515479bd01d9f17e0c859ef17cb8b1b457b8cd/Patient.png)
@@ -84,7 +83,7 @@ F-02 — Directory Listing on Sensitive Paths (High)
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/old.png?raw=true)
 
 
-F-03 — Exposed Database Backup (Critical)
+**F-03 — Exposed Database Backup (Critical)**
 `robots.txt` revealed` Disallow: /old/` — [screenshot]
 `https://medirozahospital.com/old/` showed an open directory index listing `mediroza_db_backup_2019.sql` (7 KB) — [screenshot]
 File downloaded unauthenticated via `wget;` contains full `mediroza_hr dump:` `staff` table (30 records with salaries in ZAR, national IDs, personal phone numbers, emails) and `shareholders` table (10 shareholders with ownership percentages). Header states: **"WARNING: contains confidential staff and shareholder records."** </br>
