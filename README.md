@@ -94,15 +94,15 @@ The report download endpoint accepts a user-controlled file parameter without sa
 F-05 — Defeated PDF Encryption (High)
 All three patient lab reports used PDF encryption that was recovered:
 
-File 1: [encryption type V/R from pdfinfo, mode 10500/10700, password: INSERT]
-File 2: [type, method, password: INSERT]
-File 3: [type, method, password: INSERT] Passwords were recovered with john/hashcat using wordlists derived from context (rockyou + custom list built from cewl and leaked staff data). Proof: cracking output + pdftotext of recovered contents. — [screenshots]
+File 1: [encryption type V/R from pdfinfo, mode 10500/10700, password: INSERT] ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/90ee0410b3843cd6525dfeb00aef3ad530f902a3/passwd%20pdf1.png)
+File 2: [type, method, password: INSERT] ![image]
+File 3: [type, method, password: INSERT] Passwords were recovered with john/hashcat using wordlists derived from context (rockyou + custom list built from cewl and leaked staff data). Proof: cracking output + pdftotext of recovered contents. — [screenshots] ![image]
 
 F-06 — Exposed PHP Error Log (Medium)
-/patient/error_log (243 KB) is present at a known path; listing exposure reveals its existence and size. Direct retrieval was blocked by 403 (WAF/UA filtering), but the filename is confirmed. — [screenshot of index entry]
+/patient/error_log (243 KB) is present at a known path; listing exposure reveals its existence and size. Direct retrieval was blocked by 403 (WAF/UA filtering), but the filename is confirmed. — [screenshot of index entry] ![image]
 
 F-07 — Sensitive Paths in robots.txt (Low)
-Disallow: /patient/, /staff/, /old/ acts as a disclosure mechanism for attackers; all three were confirmed exploitable locations.
+Disallow: /patient/, /staff/, /old/ acts as a disclosure mechanism for attackers; all three were confirmed exploitable locations. ![image]
 
 F-08 — Outdated/Versioned Software Disclosure (Low–Medium)
 Server banner: LiteSpeed; footer: "Mediroza CMS 1.4.2" (also in the backup header, alongside the CMS backup module that produced F-01). Version enumeration enables targeted CVE research.
