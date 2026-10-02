@@ -99,7 +99,7 @@ File 1: [encryption type V/R from pdfinfo, mode 10500/10700, password: INSERT] !
 
 File 2: [type, method, password: INSERT] ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/9b0450b6754c6a56e6477f767b5aa80ef7f7792f/passwd%20pdf%202.png)
 
-File 3: [type, method, password: INSERT] Passwords were recovered with john/hashcat using wordlists derived from context (rockyou + custom list built from cewl and leaked staff data). Proof: cracking output + pdftotext of recovered contents. — [screenshots] ![image]()
+File 3: [type, method, password: INSERT] Passwords were recovered with john/hashcat using wordlists derived from context (rockyou + custom list built from cewl and leaked staff data). Proof: cracking output + pdftotext of recovered contents. — [screenshots] ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/199c2aba2d796f29359f73ec2ab073ffb03e0b61/passwd%20pdf%203.png)
 
 F-06 — Exposed PHP Error Log (Medium)
 /patient/error_log (243 KB) is present at a known path; listing exposure reveals its existence and size. Direct retrieval was blocked by 403 (WAF/UA filtering), but the filename is confirmed. — [screenshot of index entry] ![image]
