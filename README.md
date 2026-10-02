@@ -63,37 +63,42 @@ Limitations: No DoS testing; no exploitation of out-of-scope hosts; destructive 
 
 # 3. Findings and Proof of Exploitation
 
-**F-01 — Weak Patient Portal Authentication (High)**
+**F-01 — Weak Patient Portal Authentication (High)**</br>
 
 Footprinting with `whois,` `nslookup`, `curl`,`theHarvester`, `nmap` which guided me with where next to look
 Login at /patient/login.php was assessed and defeated via [credential attack / SQLi / password reuse with data `Admin'--` and `password=anything` Authenticated session obtained; portal exposes patient lab reports. 
 Milestone 1/3 evidence:
 
-![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/Placeholder.png?raw=true)[screenshots: successful login, portal view] 
+![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/Placeholder.png?raw=true)
+
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/form%20brutefoece.png?raw=true) 
+
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/File%20access.png?raw=true)
 
 
 
-**F-02 — Directory Listing on Sensitive Paths (High)**
+**F-02 — Directory Listing on Sensitive Paths (High)**</br>
 /patient/, /staff/, and /old/ all return autoindex listings revealing file structure: login.php, download.php, portal.php, logout.php, reports/, error_log (243 KB). /patient/error_log (243 KB) is present at a known path; listing exposure reveals its existence and size. Direct retrieval was blocked by 403 (WAF/UA filtering), but the filename is confirmed.
 
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/7a515479bd01d9f17e0c859ef17cb8b1b457b8cd/Patient.png)
+
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/staff.png?raw=true)
+
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/old.png?raw=true)
 
 
-**F-03 — Exposed Database Backup (Critical)**
+**F-03 — Exposed Database Backup (Critical)**</br>
 `robots.txt` revealed` Disallow: /old/`
 `https://medirozahospital.com/old/` showed an open directory index listing `mediroza_db_backup_2019.sql`
 Disallow: /patient/, /staff/, /old/ acts as a disclosure mechanism for attackers; all three were confirmed exploitable locations.
 File downloaded unauthenticated via `wget;` contains full `mediroza_hr dump:` `staff` table (30 records with salaries in ZAR, national IDs, personal phone numbers, emails) and `shareholders` table (10 shareholders with ownership percentages). Header states: **"WARNING: contains confidential staff and shareholder records."** </br>
 
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/Robots.png?raw=true)
+
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/db%20sql.png?raw=true)
 
 
-**F-04 — Defeated PDF Encryption (High)**
+**F-04 — Defeated PDF Encryption (High)** </br>
 All three patient lab reports used PDF encryption that was recovered, but the passwords were weak and present in commonly available wordlists.
 Two reports were recovered with the built-in 100-word list, while the third required a larger password list. 
 
@@ -103,9 +108,11 @@ File 2:  ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/9b0450b67
 
 File 3: Passwords were recovered with Networkwalks password cracker-using wordlists derived from context (rockyou + custom list built from cewl and leaked staff data). Proof: cracking output + pdftotext of recovered contents.
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/199c2aba2d796f29359f73ec2ab073ffb03e0b61/passwd%20pdf%203.png)
-![image]()
 
-**F-08 — Outdated/Versioned Software Disclosure (Low–Medium)**
+![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/Evidence.png?raw=true)
+
+
+**F-05 — Outdated/Versioned Software Disclosure (Low–Medium)**
 Server banner: LiteSpeed; footer: "Mediroza CMS 1.4.2" (also in the backup header, alongside the CMS backup module that produced F-01). Version enumeration enables targeted CVE research.
 
 # 4 Risk Rating
