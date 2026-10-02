@@ -95,7 +95,9 @@ F-05 — Defeated PDF Encryption (High)
 All three patient lab reports used PDF encryption that was recovered:
 
 File 1: [encryption type V/R from pdfinfo, mode 10500/10700, password: INSERT] ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/90ee0410b3843cd6525dfeb00aef3ad530f902a3/passwd%20pdf1.png)
-File 2: [type, method, password: INSERT] ![image]
+
+File 2: [type, method, password: INSERT] ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/9b0450b6754c6a56e6477f767b5aa80ef7f7792f/passwd%20pdf%202.png)
+
 File 3: [type, method, password: INSERT] Passwords were recovered with john/hashcat using wordlists derived from context (rockyou + custom list built from cewl and leaked staff data). Proof: cracking output + pdftotext of recovered contents. — [screenshots] ![image]
 
 F-06 — Exposed PHP Error Log (Medium)
