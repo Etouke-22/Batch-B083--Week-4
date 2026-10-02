@@ -11,10 +11,10 @@ This repository documents a black-box penetration test of the Mediroza General H
 Findings, ranging from Low to Critical, were identified. The central issue was a SQL injection vulnerability in the patient portal login flow. In the authorized test environment, it enabled authentication bypass, access to confidential patient lab-report PDFs, discovery of sensitive PDF metadata, and retrieval of an exposed database backup containing staff salary and shareholder information.
 
 # Objectives
-Assess the web application from an external, unauthenticated perspective.</br>
-Identify weaknesses in authentication, input handling, file protection, and server configuration.</br>
-Demonstrate the real world impact of each finding in a controlled manner.</br>
-Document evidence and provide prioritized remediation recommendations.</br>
+1. Assess the web application from an external, unauthenticated perspective.</br>
+2. Identify weaknesses in authentication, input handling, file protection, and server configuration.</br>
+3. Demonstrate the real world impact of each finding in a controlled manner.</br>
+4. Document evidence and provide prioritized remediation recommendations.</br>
 
 |||
 |---|----|
@@ -77,8 +77,9 @@ Milestone 1/3 evidence:
 
 
 
-**F-02 — Directory Listing on Sensitive Paths (High)**</br>
-/patient/, /staff/, and /old/ all return autoindex listings revealing file structure: login.php, download.php, portal.php, logout.php, reports/, error_log (243 KB). /patient/error_log (243 KB) is present at a known path; listing exposure reveals its existence and size. Direct retrieval was blocked by 403 (WAF/UA filtering), but the filename is confirmed.
+**F-02 — Directory Listing on Sensitive Paths (High)** </br>
+/patient/, /staff/, and /old/ all return autoindex listings revealing file structure: login.php, download.php, portal.php, logout.php, reports/, error_log (243 KB). </br>
+/patient/error_log is present at a known path; listing exposure reveals its existence and size. Direct retrieval was blocked by 403 (WAF/UA filtering), but the filename is confirmed.
 
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/7a515479bd01d9f17e0c859ef17cb8b1b457b8cd/Patient.png)
 
@@ -87,9 +88,9 @@ Milestone 1/3 evidence:
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/old.png?raw=true)
 
 
-**F-03 — Exposed Database Backup (Critical)**</br>
+**F-03 — Exposed Database Backup (Critical)** </br>
 `robots.txt` revealed` Disallow: /old/`
-`https://medirozahospital.com/old/` showed an open directory index listing `mediroza_db_backup_2019.sql`
+`https://medirozahospital.com/old/` showed an open directory index listing `mediroza_db_backup_2019.sql`</br>
 Disallow: /patient/, /staff/, /old/ acts as a disclosure mechanism for attackers; all three were confirmed exploitable locations.
 File downloaded unauthenticated via `wget;` contains full `mediroza_hr dump:` `staff` table (30 records with salaries in ZAR, national IDs, personal phone numbers, emails) and `shareholders` table (10 shareholders with ownership percentages). Header states: **"WARNING: contains confidential staff and shareholder records."** </br>
 
