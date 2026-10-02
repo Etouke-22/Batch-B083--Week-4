@@ -80,7 +80,7 @@ F-03 — Weak Patient Portal Authentication (High)
 Login at /patient/login.php was assessed and defeated via [credential attack / SQLi / password reuse with data from F-01 — INSERT YOUR M1 METHOD AND EVIDENCE]. Authenticated session obtained; portal exposes patient lab reports. 
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/Placeholder.png?raw=true)[screenshots: successful login, portal view] 
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/form%20brutefoece.png?raw=true) 
-![image]()
+![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/File%20access.png?raw=true)
 
 F-04 — Path Traversal / Insecure Direct Object Reference in download.php (Critical)
 The report download endpoint accepts a user-controlled file parameter without sanitisation, allowing retrieval of files belonging to other patients (IDOR) or traversal outside the intended directory. — [INSERT YOUR EXPLOIT REQUEST/RESPONSE AND THE 3 RETRIEVED PDFs]
