@@ -77,11 +77,11 @@ Login at /patient/login.php was assessed and defeated via [credential attack / S
 
 
 F-02 — Directory Listing on Sensitive Paths (High)
-/patient/, /staff/, and /old/ all return autoindex listings revealing file structure: login.php, download.php, portal.php, logout.php, reports/, error_log (243 KB). — [screenshots of each index]
+/patient/, /staff/, and /old/ all return autoindex listings revealing file structure: login.php, download.php, portal.php, logout.php, reports/, error_log (243 KB). 
 
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/7a515479bd01d9f17e0c859ef17cb8b1b457b8cd/Patient.png)
 ![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/staff.png?raw=true)
-![image]()
+![image](https://github.com/Etouke-22/Batch-B083--Week-4/blob/main/old.png?raw=true)
 
 
 F-03 — Exposed Database Backup (Critical)
