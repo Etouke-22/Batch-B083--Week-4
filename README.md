@@ -62,10 +62,12 @@ In-scope target: medirozahospital.com (web application and associated directorie
 Limitations: No DoS testing; no exploitation of out-of-scope hosts; destructive testing avoided.
 
 # 3. Findings and Proof of Exploitation
+
+## 
 F-01 — Exposed Database Backup (Critical)
 Milestone 1/3 evidence:
 
-`robots.txt` revealed` Disallow: /old/` — [screenshot]
+Footprinting with `whois,` `nslookup`, `curl`,`theharvester`, `nmap`, `robots.txt` revealed` Disallow: /old/` — [screenshot]
 `https://medirozahospital.com/old/` showed an open directory index listing `mediroza_db_backup_2019.sql` (7 KB) — [screenshot]
 File downloaded unauthenticated via `wget;` contains full `mediroza_hr dump:` `staff` table (30 records with salaries in ZAR, national IDs, personal phone numbers, emails) and `shareholders` table (10 shareholders with ownership percentages). Header states: **"WARNING: contains confidential staff and shareholder records."** </br>
 Full data extracted in Section 4 of the engagement workbook (salaries e.g. Medical Director R160,000/mo; shareholder splits e.g. Dr. R. Naidoo 18%).
@@ -73,11 +75,9 @@ Full data extracted in Section 4 of the engagement workbook (salaries e.g. Medic
 F-02 — Directory Listing on Sensitive Paths (High)
 /patient/, /staff/, and /old/ all return autoindex listings revealing file structure: login.php, download.php, portal.php, logout.php, reports/, error_log (243 KB). — [screenshots of each index]
 
-F-03 — Weak Patient Portal Authentication (High)
-Login at /patient/login.php was assessed and defeated via [credential attack / SQLi / password reuse with data from F-01 — INSERT YOUR M1 METHOD AND EVIDENCE]. Authenticated session obtained; portal exposes patient lab reports. — [screenshots: successful login, portal view]
 
 F-03 — Weak Patient Portal Authentication (High)
-Login at /patient/login.php was assessed and defeated via [credential attack / SQLi / password reuse with data from F-01 — INSERT YOUR M1 METHOD AND EVIDENCE]. Authenticated session obtained; portal exposes patient lab reports. — [screenshots: successful login, portal view]
+Login at /patient/login.php was assessed and defeated via [credential attack / SQLi / password reuse with data from F-01 — INSERT YOUR M1 METHOD AND EVIDENCE]. Authenticated session obtained; portal exposes patient lab reports. — ![image]()[screenshots: successful login, portal view]  ![image]()  ![image]()
 
 F-04 — Path Traversal / Insecure Direct Object Reference in download.php (Critical)
 The report download endpoint accepts a user-controlled file parameter without sanitisation, allowing retrieval of files belonging to other patients (IDOR) or traversal outside the intended directory. — [INSERT YOUR EXPLOIT REQUEST/RESPONSE AND THE 3 RETRIEVED PDFs]
